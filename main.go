@@ -1,5 +1,5 @@
 /*
-Copyright © 2026 Masato Kikuchi <m-kikuchi@neody.ad.jp>
+Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 */
 package main
 

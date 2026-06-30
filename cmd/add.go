@@ -15,24 +15,24 @@ var addLocalIP net.IP
 var addRemoteIP net.IP
 var addLinkName string
 
-var addCmd = &cobra.Command{
+var AddCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Ethernet over IPv6(RFC3378)カーネルのクライアント",
-	RunE: runE,
+	RunE: AddrunE,
 }
 
-func runE(cmd *cobra.Command, args []string) error {
+func AddrunE(cmd *cobra.Command, args []string) error {
 	err := utils.AddDev(addDevName, addLocalIP, addRemoteIP, addLinkName)
 	return err
 }
 
 func init() {
-	addCmd.Flags().StringVarP(&addDevName, "devname", "d", "eip0", "作成するNICの名")
-	addCmd.Flags().IPVarP(&addLocalIP, "local", "l", nil, "自分の終端アドレス")
-	addCmd.Flags().IPVarP(&addRemoteIP, "remote", "r", nil, "相手の終端アドレス")
-	addCmd.Flags().StringVarP(&addLinkName, "link", "L", "", "アンダーレイのNIC名")
+	AddCmd.Flags().StringVarP(&addDevName, "devname", "d", "eip0", "作成するNICの名")
+	AddCmd.Flags().IPVarP(&addLocalIP, "local", "l", nil, "自分の終端アドレス")
+	AddCmd.Flags().IPVarP(&addRemoteIP, "remote", "r", nil, "相手の終端アドレス")
+	AddCmd.Flags().StringVarP(&addLinkName, "link", "L", "", "アンダーレイのNIC名")
 
-	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(AddCmd)
 }
 
 
