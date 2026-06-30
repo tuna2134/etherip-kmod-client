@@ -6,6 +6,7 @@ package utils
 
 import (
 	"encoding/binary"
+	"fmt"
 	"net"
 
 	"github.com/vishvananda/netlink"
@@ -28,6 +29,15 @@ func u32(v uint32) []byte {
 }
 
 func AddDev(DevName string, local net.IP, remote net.IP, linkName string) error {
+	local = local.To16()
+	if local == nil {
+		return fmt.Errorf("local must be an IPv6 address")
+	}
+	remote = remote.To16()
+	if remote == nil {
+		return fmt.Errorf("remote must be an IPv6 address")
+	}
+
 	req := nl.NewNetlinkRequest(
 		unix.RTM_NEWLINK,
 		unix.NLM_F_REQUEST|unix.NLM_F_CREATE|unix.NLM_F_EXCL|unix.NLM_F_ACK,
@@ -42,8 +52,8 @@ func AddDev(DevName string, local net.IP, remote net.IP, linkName string) error 
 	linkInfo.AddRtAttr(nl.IFLA_INFO_KIND, nl.ZeroTerminated("etherip6"))
 
 	infoData := nl.NewRtAttr(nl.IFLA_INFO_DATA, nil)
-	infoData.AddRtAttr(IFLA_ETHERIP6_LOCAL, local.To16())
-	infoData.AddRtAttr(IFLA_ETHERIP6_REMOTE, remote.To16())
+	infoData.AddRtAttr(IFLA_ETHERIP6_LOCAL, local)
+	infoData.AddRtAttr(IFLA_ETHERIP6_REMOTE, remote)
 
 	if linkName != "" {
 		link, err := netlink.LinkByName(linkName)
@@ -55,7 +65,7 @@ func AddDev(DevName string, local net.IP, remote net.IP, linkName string) error 
 
 	infoData.AddRtAttr(IFLA_ETHERIP6_HOP_LIMIT, []byte{255})
 
-	linkInfo.AddRtAttr(nl.IFLA_INFO_DATA, infoData.Serialize())
+	linkInfo.AddChild(infoData)
 	req.AddData(linkInfo)
 
 	_, err := req.Execute(unix.NETLINK_ROUTE, 0)
