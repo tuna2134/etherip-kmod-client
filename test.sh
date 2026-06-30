@@ -1,1 +1,1 @@
-sudo ./etherip-client -d eip0 -l 2402:2f60:500:beef:be24:11ff:fe12:d655 -r 2401:5e40:1:462:6709:e050:dcc5:d592 -L ens18
+sudo ./etherip-client add -d eip0 -l 2402:2f60:500:beef:be24:11ff:fe12:d655 -r 2401:5e40:1:462:6709:e050:dcc5:d592 -L ens18
